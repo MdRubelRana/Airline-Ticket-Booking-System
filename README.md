@@ -11,4 +11,10 @@ Airplane Ticket Booking System. This Project is developed in C programming langu
   ** Delete Record  
   ** Easily EXIT  
 
+## Contributors
+Md. Rubel Rana <contact@mdrubel.info>
+
+## License
+Licensed under the [MIT License](LICENSE).
+
 ----- Thank you -----
