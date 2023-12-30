@@ -22,6 +22,7 @@ void viewall();
 void find();
 void book_tic();
 void old_rec();
+void delete();
 
 void main()
 {
@@ -64,9 +65,9 @@ void main()
 		old_rec();
 		break;
 
-    /*  case 6:
+      case 6:
         delete();
-        break;   */
+        break;
 
         case 0:
         exit(0);
@@ -260,3 +261,67 @@ fp = fopen("record.txt","r");
 	}
 	fclose(fp);
 }
+
+
+void delete() {
+    FILE *file, *ufp;
+    char buffer[1000], phoneNumber[20];
+    int lineNumber = 0, found = 0, MAX=256;
+    char str[MAX], original_file[] = "record.txt", temp[] = "temp.txt";
+
+    file = fopen(original_file, "r");
+    if (file == NULL) 
+    {
+        printf("Error opening file");
+        exit(1);
+    }
+    ufp = fopen(temp, "w");
+    if (ufp == NULL) 
+    {
+        printf("Couldn't create temporary file!");
+        fclose(file);
+        exit(1);
+    }
+    printf("Enter the phone number to search: ");
+    scanf("%s", phoneNumber);
+
+    // finding the line number to delete based on phone number
+    while (fgets(buffer, sizeof(buffer), file) != NULL) 
+    {
+        lineNumber++;
+        if (strstr(buffer, phoneNumber) != NULL) {
+            printf("Recorded successfully deleted!");
+            found = lineNumber;
+            break;
+        }
+    }
+
+    // deleting the record by swapping files
+    if (found) 
+    {
+        fclose(file);
+        file = fopen(original_file, "r");
+        if (file == NULL) {
+            printf("Error opening file");
+            exit(1);
+        }
+        lineNumber = 0;
+        while (fgets(str, MAX, file) != NULL) 
+        {
+            lineNumber++;
+            if (lineNumber != found) {
+                fprintf(ufp, "%s", str);
+            }
+        }
+
+        fclose(file);
+        fclose(ufp);
+        remove(original_file);          // Remove the original file
+        rename(temp, original_file);    // Rename the temporary file to the original name
+    } else {
+        printf("Phone number not found in the file.\n");
+        remove(temp);
+        fclose(file);
+    }
+}
+
